@@ -1,0 +1,33 @@
+@media only screen and (max-width: 1200px) {
+    h1 {
+        font-weight: 500;
+    }
+
+    h2 {
+        font-weight: 300;
+        padding-bottom: 3dvh;
+    }
+
+    .circuit-diagram {
+        width: 100%;
+        height: max(max-content, 25dvh);
+        margin-left: 3dvh;
+        margin-right: 3dvh;
+        padding: 2dvw;
+        background-color: rgba(250, 250, 250, 1);
+        text-align: center;
+        border-radius: 15px;
+        flex-basis: 100%;
+    }
+
+    .rangeInput {
+        width: 75%;
+    }
+
+    button {
+        font-size: 2.5dvh;
+        padding: 1dvh 5dvw;
+        height: 6dvh;
+        width: 50dvw;
+    }
+}
