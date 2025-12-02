@@ -34,31 +34,58 @@ function generateCircuit() {
 
   circuit = new QuantumCircuit(qubitNo);
 
-  for (let i = 0; i < gateNo; i++) {
-    /* Append randomly chosen gates to circuit */
+  var gateApplicator = [];
+
+  for (let i = 0; i < Math.min(qubitNo, gateNo); i++) {
     selGate = gateSet[Math.floor(Math.random() * gateSet.length)];
-    var control = Math.floor(Math.random() * qubitNo);
+    while (i == 0 && selGate == "cx") {
+      selGate = gateSet[Math.floor(Math.random() * gateSet.length)];
+    }
     if (selGate != "cx") {
-      circuit.appendGate(selGate, control);
-    } else if (qubitNo > 1) {
+      gateApplicator.push([selGate, [i]]);
+    } else {
       var target = -1;
-      while (target == -1 || target == control) {
+      while (target == -1 || target == i) {
         target = Math.floor(Math.random() * qubitNo);
       }
-      circuit.appendGate("cx", [control, target]);
+      gateApplicator.push([selGate, [i, target]]);
+    }
+  }
+
+  var control = Math.min(qubitNo, gateNo);
+  while (gateApplicator.length < gateNo) {
+    selGate = gateSet[Math.floor(Math.random() * gateSet.length)];
+    while (selGate == gateApplicator[gateApplicator.length - qubitNo][0]) {
+      selGate = gateSet[Math.floor(Math.random() * gateSet.length)];
+    }
+    if (selGate != "cx") {
+      gateApplicator.push([selGate, [control % qubitNo]]);
+    } else if (qubitNo > 1) {
+      var target = -1;
+      while (target == -1 || target == control % qubitNo) {
+        target = Math.floor(Math.random() * qubitNo);
+      }
+      gateApplicator.push([selGate, [control % qubitNo, target]]);
+    }
+    control++;
+  }
+
+  for (let i = 0; i < gateApplicator.length; i++) {
+    var nextGate = gateApplicator[i];
+    if (nextGate[0] != "cx") {
+      circuit.appendGate(nextGate[0], nextGate[1][0]);
     } else {
-      i--;
-      continue;
+      circuit.appendGate(nextGate[0], nextGate[1]);
     }
     circuit.run();
-    if (selGate == "cx") {
+    if (nextGate != "cx") {
       statevector_steps.push([
-        selGate.concat(`[${control}, ${target}]`),
+        nextGate[0].concat(`[${nextGate[1][0]}]`),
         circuit.stateAsString(true),
       ]);
     } else {
       statevector_steps.push([
-        selGate.concat(`[${control}]`),
+        nextGate[0].concat(`[${nextGate[1][0]}, ${nextGate[1][1]}]`),
         circuit.stateAsString(true),
       ]);
     }
