@@ -34,23 +34,32 @@
                 <div id="circuit"><p>No Circuit!</p></div>
             </div>
             <div class="slider">
-                <input
-                    type="range"
-                    id="depth"
-                    class="rangeInput"
-                    value="4"
-                    min="1"
-                    max="15"
-                />
-                <input
-                    type="range"
-                    id="qubitNo"
-                    class="rangeInput"
-                    min="1"
-                    max="3"
-                />
-                <p id="gateCount" class="rangeText">Gate Count:</p>
-                <p id="qubitCount" class="rangeText">Qubit Count:</p>
+                <div class="rangeInput">
+                    <input
+                        type="range"
+                        id="depth"
+                        class="sliderWidth"
+                        value="4"
+                        min="1"
+                        max="15"
+                    />
+                    <p id="gateCount" class="rangeText">Gate Count:</p>
+                </div>
+                <div class="rangeInput">
+                    <input
+                        type="range"
+                        id="qubitNo"
+                        class="sliderWidth"
+                        min="1"
+                        max="3"
+                    />
+                    <p id="qubitCount" class="rangeText">Qubit Count:</p>
+                </div>
+
+                <div class="phaseInput">
+                    <input type="checkbox" id="phases" />
+                    <p id="phaseText" class="rangeText">Include Phase Gates</p>
+                </div>
             </div>
             <button class="button gradient" id="generate">Generate</button>
         </div>
@@ -61,14 +70,14 @@
                     Step-By-Step Output
                     <span class="material-symbols-outlined">info</span
                     ><span class="tooltiptext">
-                        Output of the form: |q<sub>n-1</sub> ⊗ q<sub>n-2</sub> ⊗
-                        ... ⊗ q<sub>0</sub>>
+                        Output of the form: |q<sub>0</sub> ⊗ q<sub>1</sub> ⊗ ...
+                        ⊗ q<sub>n-1</sub>>
                     </span>
                 </h3>
                 <p id="statevector_steps">No Output!</p>
             </div>
             <button class="button gradient" id="execute">Reveal</button>
         </div>
-        <script src="/main.js"></script>
+        <script src="./main.js"></script>
     </body>
 </html>

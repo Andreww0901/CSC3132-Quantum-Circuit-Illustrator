@@ -72,14 +72,30 @@ h3 {
     margin-top: 3dvh;
     margin-left: auto;
     margin-right: auto;
-    width: 33%;
+}
+
+.sliderWidth {
+    width: 100%;
+}
+
+.phaseInput {
+    margin-bottom: 3dvh;
+    margin-top: 3dvh;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#phases {
+    zoom: 1.5;
 }
 
 .rangeText {
     align-content: center;
     text-align: center;
-    width: 50%;
-    margin: auto;
+    width: 100%;
+    margin-top: 3dvh;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .gradient {

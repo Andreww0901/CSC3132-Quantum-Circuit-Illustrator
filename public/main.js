@@ -14,19 +14,39 @@ depthInput.addEventListener("input", (event) => {
 
 qubitInput.addEventListener("input", (event) => {
   qubitCountValue.textContent = "Qubit Count: ".concat(event.target.value);
-});
+}); /* List of gates available for circuit construction */
 
-const gateSet = [
-  "x",
-  "cx",
-  "h",
-]; /* List of gates available for circuit construction */
+/* Reverse bitstring into little endian format (Thanks Sebastian Stewart for implementing this!!) */
+function reverseQubitState(state) {
+  return state
+    .split("\n")
+    .map((line) => {
+      if (!line) return line;
+
+      const [coeff, rest] = line.split("|");
+      const [bits, prob] = rest.split(">");
+
+      // Reverse the bits
+      const reversedBits = bits.split("").reverse().join("");
+
+      // Reassemble
+      return `${coeff}|${reversedBits}>${prob}`;
+    })
+    .join("\n");
+}
 
 var statevector_steps = [];
 
 var statevector = null; /* Holds final output statevector of the circuit */
 
 function generateCircuit() {
+  var gateSet = ["x", "cx", "h"];
+
+  if (document.querySelector("#phases").checked) {
+    gateSet.push("t");
+    gateSet.push("s");
+  }
+
   statevector_steps = [];
   document.getElementById("circuit").innerHTML = "<p>No Circuit!</p>";
   let gateNo = depthInput.value;
@@ -55,38 +75,46 @@ function generateCircuit() {
   var control = Math.min(qubitNo, gateNo);
   while (gateApplicator.length < gateNo) {
     selGate = gateSet[Math.floor(Math.random() * gateSet.length)];
-    while (selGate == gateApplicator[gateApplicator.length - qubitNo][0]) {
+    while (
+      selGate == gateApplicator[gateApplicator.length - qubitNo][0] ||
+      (selGate == "cx" &&
+        selGate == gateApplicator[gateApplicator.length - 1][0])
+    ) {
       selGate = gateSet[Math.floor(Math.random() * gateSet.length)];
     }
     if (selGate != "cx") {
       gateApplicator.push([selGate, [control % qubitNo]]);
+      control++;
     } else if (qubitNo > 1) {
       var target = -1;
       while (target == -1 || target == control % qubitNo) {
         target = Math.floor(Math.random() * qubitNo);
       }
-      gateApplicator.push([selGate, [control % qubitNo, target]]);
+      if (qubitNo == 3 && control % qubitNo == 2 && target == 1) {
+        gateApplicator.push(["Barrier", [0]]);
+      }
     }
-    control++;
+    gateApplicator.push([selGate, [control % qubitNo, target]]);
+    if (control % qubitNo == qubitNo - 1) {
+      control++;
+    }
   }
 
   for (let i = 0; i < gateApplicator.length; i++) {
     var nextGate = gateApplicator[i];
     if (nextGate[0] != "cx") {
       circuit.appendGate(nextGate[0], nextGate[1][0]);
-    } else {
-      circuit.appendGate(nextGate[0], nextGate[1]);
-    }
-    circuit.run();
-    if (nextGate != "cx") {
+      circuit.run();
       statevector_steps.push([
         nextGate[0].concat(`[${nextGate[1][0]}]`),
-        circuit.stateAsString(true),
+        reverseQubitState(circuit.stateAsString(true)),
       ]);
     } else {
+      circuit.appendGate(nextGate[0], nextGate[1]);
+      circuit.run();
       statevector_steps.push([
         nextGate[0].concat(`[${nextGate[1][0]}, ${nextGate[1][1]}]`),
-        circuit.stateAsString(true),
+        reverseQubitState(circuit.stateAsString(true)),
       ]);
     }
   }
@@ -97,10 +125,9 @@ function generateCircuit() {
   }
 
   circuit.run();
-  statevector =
-    circuit.stateAsString(
-      true,
-    ); /* "Executes" the circuit and saves probabilities */
+  statevector = reverseQubitState(
+    circuit.stateAsString(true),
+  ); /* "Executes" the circuit and saves probabilities */
 
   document.getElementById("circuit").innerHTML = circuit.exportSVG(true);
   var circuitSVG =

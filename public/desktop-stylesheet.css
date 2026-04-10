@@ -25,7 +25,12 @@
     }
 
     .rangeInput {
-        width: 33%;
+        width: 25%;
+    }
+
+    .phaseInput {
+        width: 25%;
+        margin: auto;
     }
 
     button {
