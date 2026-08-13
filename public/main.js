@@ -40,7 +40,12 @@ var statevector_steps = [];
 var statevector = null; /* Holds final output statevector of the circuit */
 
 function generateCircuit() {
-  var gateSet = ["x", "cx", "h"];
+  if (qubitInput.value == 1) {
+    var gateSet = ["x", "h"];
+  }
+  else {
+    var gateSet = ["x", "cx", "h"];
+  }
 
   if (document.querySelector("#phases").checked) {
     gateSet.push("t");
@@ -120,7 +125,7 @@ function generateCircuit() {
   }
 
   for (let i = 0; i < qubitNo; i++) {
-    /* Append measurement at end of circuit for easier readability */
+    /* Append measurement at end of circuit for ease of readability */
     circuit.addMeasure(i);
   }
 
@@ -134,15 +139,33 @@ function generateCircuit() {
     document.getElementsByClassName(
       "qc-circuit",
     )[0]; /* Generate SVG image of circuit */
+
+
+  var qubitSVGSpacing = 74;
+
   circuitSVG.setAttribute(
     "height",
-    circuitSVG.getBBox().height + 55,
+    qubitInput.value * qubitSVGSpacing + 34,
   ); /* quantum-circuit package is busted and creates SVGs of insane heights, this is a bandaid solution */
+
+  var scalar = Math.min(1 / (circuitSVG.getBBox().width / ((document.getElementById("circuit-diagram").offsetWidth) * 0.95)), 1);
+  circuitSVG.setAttribute(
+    "transform",
+    "scale(" + scalar + ")"
+  );
+
+  var diagramBoxHeight = document.getElementById("diagram-title").offsetHeight + (qubitInput.value * qubitSVGSpacing + 34) * scalar;
+  document.getElementsByClassName("stretchBox")[0].setAttribute("style", "height: " + diagramBoxHeight + "px");
+
   document.getElementById("statevector_steps").innerHTML = "...";
+  generated = true;
 }
 
 function revealSteps() {
   /* Reveals the compute steps to the user when they want to verify */
+  if (!generated) {
+    return
+  }
   document.getElementById("statevector_steps").innerHTML = "";
   let sv_string = [];
   for (let i = 0; i < statevector_steps.length; i++) {
@@ -159,6 +182,8 @@ function revealSteps() {
       .concat("<br />");
   }
 }
+
+var generated = false;
 
 document.getElementById("generate").onclick = generateCircuit;
 document.getElementById("execute").onclick = revealSteps;

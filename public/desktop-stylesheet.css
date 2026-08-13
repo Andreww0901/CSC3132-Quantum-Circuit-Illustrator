@@ -13,9 +13,12 @@
         padding-bottom: 2dvh;
     }
 
+    svg {
+        transform: scale(1);
+    }
+
     .circuit-diagram {
         width: 100%;
-        height: max(max-content, 25dvh);
         margin-left: 10dvh;
         margin-right: 10dvh;
         padding: 2dvh;

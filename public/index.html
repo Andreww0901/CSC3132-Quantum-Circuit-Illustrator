@@ -21,17 +21,13 @@
     </head>
     <body>
         <!-- You shouldn't be here. Get back to work! -->
-        <script
-            type="text/javascript"
-            src="https://unpkg.com/quantum-circuit"
-        ></script>
         <div class="banner center">
             <h1>CSC3132</h1>
             <h2>Random Circuit Generator</h2>
         </div>
         <div class="circuit center">
-            <div class="circuit-diagram">
-                <h3>Circuit Diagram</h3>
+            <div class="circuit-diagram stretchBox" id="circuit-diagram">
+                <h3 id="diagram-title">Circuit Diagram</h3>
                 <div id="circuit"><p>No Circuit!</p></div>
             </div>
             <div class="slider">
@@ -79,6 +75,10 @@
             </div>
             <button class="button gradient" id="execute">Reveal</button>
         </div>
+        <script
+            type="text/javascript"
+            src="https://unpkg.com/quantum-circuit"
+        ></script>
         <script src="./main.js"></script>
     </body>
 </html>
