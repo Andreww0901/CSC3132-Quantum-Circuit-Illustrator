@@ -150,8 +150,8 @@ function generateCircuit() {
 
   var scalar = Math.min(1 / (circuitSVG.getBBox().width / ((document.getElementById("circuit-diagram").offsetWidth) * 0.95)), 1);
   circuitSVG.setAttribute(
-    "transform",
-    "scale(" + scalar + ")"
+    "style",
+    "-webkit-transform: scale(" + scalar + "," + scalar + ")"
   );
 
   var diagramBoxHeight = document.getElementById("diagram-title").offsetHeight + (qubitInput.value * qubitSVGSpacing + 34) * scalar;
