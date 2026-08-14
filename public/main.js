@@ -77,30 +77,24 @@ function generateCircuit() {
     }
   }
 
-  var control = Math.min(qubitNo, gateNo);
+  var control = Math.floor(Math.random() * qubitNo);
   while (gateApplicator.length < gateNo) {
     selGate = gateSet[Math.floor(Math.random() * gateSet.length)];
     while (
-      selGate == gateApplicator[gateApplicator.length - qubitNo][0] ||
+      selGate == gateApplicator[gateApplicator.length - qubitNo][0] || /* Attempt to remove duplicate gates */
       (selGate == "cx" &&
         selGate == gateApplicator[gateApplicator.length - 1][0])
     ) {
       selGate = gateSet[Math.floor(Math.random() * gateSet.length)];
     }
     if (selGate != "cx") {
-      gateApplicator.push([selGate, [control % qubitNo]]);
-      control++;
+      gateApplicator.push([selGate, [Math.floor(Math.random() * qubitNo)]]);
     } else if (qubitNo > 1) {
       var target = -1;
-      while (target == -1 || target == control % qubitNo) {
+      while (target == -1 || target == control) {
         target = Math.floor(Math.random() * qubitNo);
       }
-      if (qubitNo == 3 && control % qubitNo == 2 && target == 1) {
-        gateApplicator.push(["Barrier", [0]]);
-      }
-    }
-    if (control % qubitNo == qubitNo - 1) {
-      control++;
+      gateApplicator.push([selGate, [control, target]]);
     }
   }
 
