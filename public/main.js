@@ -170,16 +170,16 @@ function revealSteps() {
   let sv_string = [];
   for (let i = 0; i < statevector_steps.length; i++) {
     sv_string.push(
-      `Step ${i + 1} - Apply ${statevector_steps[i][0].toUpperCase()}: <br />`,
+      `<b>Step ${i + 1} - Apply ${statevector_steps[i][0].toUpperCase()}:</b> <br />`,
     );
     let step = statevector_steps[i][1].split("%");
     for (let j = 0; j < step.length - 1; j++) {
-      sv_string[i] = sv_string[i].concat(step[j]).concat("%<br />");
+      let substep = step[j].split(">")
+      sv_string[i] = sv_string[i].concat(`<p>${substep[0]}></p><p class="probabilities">${substep[1]}%</p><br />`);
     }
     document.getElementById("statevector_steps").innerHTML = document
       .getElementById("statevector_steps")
-      .innerHTML.concat(sv_string[i])
-      .concat("<br />");
+      .innerHTML.concat(sv_string[i]);
   }
 }
 

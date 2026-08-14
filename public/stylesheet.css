@@ -109,6 +109,14 @@ h3 {
     animation: buttonGrad 2s ease infinite;
 }
 
+.probabilities {
+    background-image: linear-gradient(225deg, #cc456c, #9931f5);
+    color: transparent;
+    background-clip: text;
+    background-size: 500% 500%;
+    animation: buttonGrad 2s ease infinite;
+}
+
 @keyframes buttonGrad {
     0% {
         background-position: 50% 0%;
