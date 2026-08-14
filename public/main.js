@@ -99,7 +99,6 @@ function generateCircuit() {
         gateApplicator.push(["Barrier", [0]]);
       }
     }
-    gateApplicator.push([selGate, [control % qubitNo, target]]);
     if (control % qubitNo == qubitNo - 1) {
       control++;
     }
